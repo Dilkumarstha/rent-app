@@ -91,6 +91,27 @@ export async function PUT(req, { params }) {
             runValidators: true,
         });
 
+        // Cascading update for all subsequent bills for this tenant
+        const subsequentBills = await Bill.find({
+            tenantId: billToUpdate.tenantId,
+            createdAt: { $gt: billToUpdate.createdAt }
+        }).sort({ createdAt: 1 });
+
+        let currentCarriedDue = bill.remaining;
+
+        for (const sb of subsequentBills) {
+            const sbTotal = (sb.rent || 0) + (sb.water || 0) + (sb.electricityCost || 0) + currentCarriedDue;
+            const sbRemaining = sbTotal - (sb.cashAmount || 0) - (sb.onlineAmount || 0);
+
+            await Bill.findByIdAndUpdate(sb._id, {
+                previousDue: currentCarriedDue,
+                total: sbTotal,
+                remaining: sbRemaining
+            });
+
+            currentCarriedDue = sbRemaining;
+        }
+
         return NextResponse.json({ success: true, data: bill }, { status: 200 });
     } catch (error) {
         return NextResponse.json(
@@ -111,6 +132,33 @@ export async function DELETE(req, { params }) {
                 { status: 404 }
             );
         }
+
+        // Handle cascading updates for deletion
+        const previousBill = await Bill.findOne({
+            tenantId: bill.tenantId,
+            createdAt: { $lt: bill.createdAt }
+        }).sort({ createdAt: -1 });
+
+        let currentCarriedDue = previousBill ? previousBill.remaining : 0;
+
+        const subsequentBills = await Bill.find({
+            tenantId: bill.tenantId,
+            createdAt: { $gt: bill.createdAt }
+        }).sort({ createdAt: 1 });
+
+        for (const sb of subsequentBills) {
+            const sbTotal = (sb.rent || 0) + (sb.water || 0) + (sb.electricityCost || 0) + currentCarriedDue;
+            const sbRemaining = sbTotal - (sb.cashAmount || 0) - (sb.onlineAmount || 0);
+
+            await Bill.findByIdAndUpdate(sb._id, {
+                previousDue: currentCarriedDue,
+                total: sbTotal,
+                remaining: sbRemaining
+            });
+
+            currentCarriedDue = sbRemaining;
+        }
+
         return NextResponse.json({ success: true, data: {} }, { status: 200 });
     } catch (error) {
         return NextResponse.json(

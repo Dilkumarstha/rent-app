@@ -69,132 +69,149 @@ export default function TenantsPage() {
         return (
             <div className="space-y-6">
                 <Skeleton className="h-12 w-52 rounded-xl" />
-                <Skeleton className="h-80 w-full rounded-2xl" />
+                <Skeleton className="h-80 w-full rounded-xl" />
             </div>
         );
     }
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700 pb-20 px-2">
             {/* Header */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] p-6 md:p-8 border border-white/[0.06]">
-                <div className="absolute top-0 right-0 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-                <div className="relative flex flex-col md:flex-row md:justify-between md:items-end gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-white">Tenants</h1>
-                        <p className="text-slate-400 mt-1 text-sm">Manage your tenants and properties.</p>
-                    </div>
-
-                    <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                        <DialogTrigger asChild>
-                            <Button size="lg" className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold shadow-lg shadow-cyan-500/25 border-0 transition-all rounded-xl">
-                                <Plus className="w-5 h-5 mr-2" /> Add Tenant
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="bg-[#0f172a] border-white/10 text-white">
-                            <DialogHeader>
-                                <DialogTitle className="text-2xl font-bold text-white">Add New Tenant</DialogTitle>
-                                <DialogDescription className="text-slate-400">Fill out the details of the new tenant.</DialogDescription>
-                            </DialogHeader>
-                            <form onSubmit={handleAdd} className="space-y-4 py-4">
-                                <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Full Name</Label>
-                                    <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="John Doe" className="bg-white/5 border-white/10 text-white h-10 rounded-xl placeholder:text-slate-600" />
-                                </div>
-                                <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Room / Flat / Unit</Label>
-                                    <Input required value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })} placeholder="3B" className="bg-white/5 border-white/10 text-white h-10 rounded-xl placeholder:text-slate-600" />
-                                </div>
-                                <div className="space-y-1.5">
-                                    <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Monthly Base Rent (Rs.)</Label>
-                                    <Input required type="number" value={formData.rent} onChange={e => setFormData({ ...formData, rent: e.target.value })} placeholder="15000" className="bg-white/5 border-white/10 text-white h-10 rounded-xl placeholder:text-slate-600" />
-                                </div>
-                                <DialogFooter className="pt-4">
-                                    <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold border-0 rounded-xl shadow-lg shadow-cyan-500/25">Save Tenant</Button>
-                                </DialogFooter>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">
+                        Tenants <span className="text-primary italic ml-1">Directory</span>
+                    </h1>
+                    <p className="text-muted-foreground mt-1 font-medium flex items-center gap-2">
+                        <Users className="w-4 h-4 text-primary" />
+                        Total of <span className="text-primary font-bold">{tenants.length}</span> households registered
+                    </p>
                 </div>
+
+                <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                    <DialogTrigger asChild>
+                        <button className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-semibold shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <Plus className="w-5 h-5 stroke-[2.5]" /> Add New Resident
+                        </button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-white border-slate-200 rounded-xl max-w-md shadow-2xl">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold text-foreground">New Resident</DialogTitle>
+                            <DialogDescription className="text-muted-foreground font-medium">Register a new tenant to the system.</DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={handleAdd} className="space-y-4 py-4">
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Full Identity</Label>
+                                <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="John Snow" className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Property Reference</Label>
+                                <Input required value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })} placeholder="Flat 402" className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Base Monthly Rent (Rs.)</Label>
+                                <Input required type="number" value={formData.rent} onChange={e => setFormData({ ...formData, rent: e.target.value })} placeholder="25000" className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
+                            </div>
+                            <DialogFooter className="pt-4">
+                                <Button type="submit" className="w-full bg-primary text-primary-foreground font-bold h-11 rounded-lg border-0 shadow-md">Create Tenant Profile</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             {/* Tenants Table */}
-            <div className="rounded-2xl overflow-hidden border border-white/[0.06] bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+            <div className="rounded-xl glass-card overflow-hidden">
                 {tenants.length > 0 ? (
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="hover:bg-transparent border-b border-white/[0.06] bg-white/[0.02]">
-                                <TableHead className="pl-5 py-3.5 text-[11px] uppercase tracking-wider font-semibold text-slate-500">Tenant</TableHead>
-                                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Room</TableHead>
-                                <TableHead className="text-[11px] uppercase tracking-wider font-semibold text-slate-500">Monthly Rent</TableHead>
-                                <TableHead className="text-right pr-5 text-[11px] uppercase tracking-wider font-semibold text-slate-500">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {tenants.map((t) => (
-                                <TableRow key={t._id} className="group transition-colors hover:bg-white/[0.03] border-b border-white/[0.04]">
-                                    <TableCell className="pl-5">
-                                        <Link href={`/tenants/${t._id}`} className="flex items-center gap-3 group/link">
-                                            <Avatar className="w-9 h-9 border border-white/10">
-                                                <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-blue-500 text-white font-bold text-xs">
-                                                    {t.name.substring(0, 2).toUpperCase()}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <span className="font-semibold text-white group-hover/link:text-cyan-400 transition-colors text-sm">
-                                                {t.name}
-                                            </span>
-                                            <ArrowRight className="w-3.5 h-3.5 text-slate-600 opacity-0 group-hover/link:opacity-100 transition-opacity" />
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        <span className="text-xs font-mono text-slate-400 bg-white/5 px-2 py-1 rounded-md">Room {t.room}</span>
-                                    </TableCell>
-                                    <TableCell className="font-bold text-white text-sm">Rs. {t.rent.toLocaleString()}</TableCell>
-                                    <TableCell className="text-right pr-5 space-x-0.5">
-                                        <Button variant="ghost" size="icon" onClick={(e) => { e.preventDefault(); openEdit(t); }} className="opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 hover:bg-white/10">
-                                            <Edit2 className="w-3.5 h-3.5 text-slate-400" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon" onClick={(e) => { e.preventDefault(); handleDelete(t._id); }} className="opacity-0 group-hover:opacity-100 hover:bg-red-500/10 transition-opacity h-7 w-7">
-                                            <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                                        </Button>
-                                    </TableCell>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="hover:bg-transparent border-b border-slate-100 bg-slate-50/50">
+                                    <TableHead className="pl-6 py-4 text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Resident</TableHead>
+                                    <TableHead className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Property</TableHead>
+                                    <TableHead className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Monthly Base</TableHead>
+                                    <TableHead className="text-right pr-6 text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Controls</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {tenants.map((t) => (
+                                    <TableRow key={t._id} className="hover:bg-slate-50 transition-colors border-b last:border-0 border-slate-100">
+                                        <TableCell className="pl-6 py-4">
+                                            <Link href={`/tenants/${t._id}`} className="flex items-center gap-4 group/link">
+                                                <Avatar className="w-10 h-10 border-2 border-white shadow-sm ring-1 ring-slate-100">
+                                                    <AvatarFallback className="bg-slate-100 text-slate-600 font-bold text-xs uppercase">
+                                                        {t.name.substring(0, 2)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <span className="font-bold text-foreground group-hover/link:text-primary transition-colors block text-sm leading-tight">
+                                                        {t.name}
+                                                    </span>
+                                                    <span className="text-[9px] uppercase font-bold text-muted-foreground/50 tracking-widest block mt-0.5">Resident</span>
+                                                </div>
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                                                {t.room}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="font-bold text-foreground text-sm tracking-tight px-4">
+                                            Rs. {t.rent.toLocaleString()}
+                                        </TableCell>
+                                        <TableCell className="text-right pr-6">
+                                            <div className="flex items-center justify-end gap-1">
+                                                <Button variant="ghost" size="icon" onClick={(e) => { e.preventDefault(); openEdit(t); }} className="h-8 w-8 rounded-lg hover:bg-slate-100 text-muted-foreground transition-colors">
+                                                    <Edit2 className="w-3.5 h-3.5" />
+                                                </Button>
+                                                <Button variant="ghost" size="icon" onClick={(e) => { e.preventDefault(); handleDelete(t._id); }} className="h-8 w-8 rounded-lg hover:bg-red-50 hover:text-red-500 text-muted-foreground transition-colors">
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </Button>
+                                                <Link href={`/tenants/${t._id}`}>
+                                                    <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-primary hover:text-white transition-all ml-1">
+                                                        <ArrowRight className="w-4 h-4" />
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 ) : (
                     <div className="text-center py-24 flex flex-col items-center">
-                        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 p-6 rounded-full mb-4 border border-white/[0.06]">
-                            <Users className="w-12 h-12 text-cyan-400" />
+                        <div className="bg-slate-50 p-8 rounded-xl mb-4 border border-slate-200">
+                            <Users className="w-12 h-12 text-slate-300 stroke-[1.5]" />
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">No tenants yet</h3>
-                        <p className="text-slate-400 text-sm">Add a new tenant to get started.</p>
+                        <h3 className="text-xl font-bold text-foreground mb-1">Neighborhood is Empty</h3>
+                        <p className="text-muted-foreground font-medium text-sm">Add your first tenant to populate the building.</p>
                     </div>
                 )}
             </div>
 
             {/* Edit Dialog */}
             <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogContent className="bg-[#0f172a] border-white/10 text-white">
+                <DialogContent className="bg-white border-slate-200 rounded-xl max-w-md shadow-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold text-white">Edit Tenant</DialogTitle>
-                        <DialogDescription className="text-slate-400">Update tenant information or base rent.</DialogDescription>
+                        <DialogTitle className="text-2xl font-bold text-foreground">Edit Listing</DialogTitle>
+                        <DialogDescription className="text-muted-foreground font-medium">Update tenant details or rental agreement.</DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleEdit} className="space-y-4 py-4">
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Full Name</Label>
-                            <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="bg-white/5 border-white/10 text-white h-10 rounded-xl" />
+                            <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Full Identity</Label>
+                            <Input required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Room / Flat / Unit</Label>
-                            <Input required value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })} className="bg-white/5 border-white/10 text-white h-10 rounded-xl" />
+                            <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Property Reference</Label>
+                            <Input required value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })} className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Monthly Base Rent (Rs.)</Label>
-                            <Input required type="number" value={formData.rent} onChange={e => setFormData({ ...formData, rent: e.target.value })} className="bg-white/5 border-white/10 text-white h-10 rounded-xl" />
+                            <Label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider pl-1">Monthly Base Rent (Rs.)</Label>
+                            <Input required type="number" value={formData.rent} onChange={e => setFormData({ ...formData, rent: e.target.value })} className="border-slate-200 text-foreground h-11 rounded-lg px-4 font-medium focus-visible:ring-primary" />
                         </div>
                         <DialogFooter className="pt-4">
-                            <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold border-0 rounded-xl shadow-lg shadow-cyan-500/25">Update Tenant</Button>
+                            <Button type="submit" className="w-full bg-primary text-primary-foreground font-bold h-11 rounded-lg border-0 shadow-md">Update Profile</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
